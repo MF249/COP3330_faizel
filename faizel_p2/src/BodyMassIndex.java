@@ -19,7 +19,7 @@ public class BodyMassIndex {
             temp = "Underweight";
         }
         else if(bmi < 25) {
-            temp = "Normal weight";
+            temp = "Normal Weight";
         }
         else if(bmi < 30) {
             temp = "Overweight";
