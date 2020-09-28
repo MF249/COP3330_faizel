@@ -71,8 +71,12 @@ public class App {
         int ctr = bmiArray.size();
         double average = 0;
         for (i = 0; i < ctr; i++) {
-            average = bmiArray.get(i).bmi++;
+            average += bmiArray.get(i).bmi;
         }
+        // System.out.println(average);
+        average = average/ctr;
+
+        // System.out.println(average);
 
         System.out.println("----------------------------");
         System.out.println("Average User BMI: " + formatter.format(average));

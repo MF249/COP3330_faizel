@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,4 +62,5 @@ class BodyMassIndexTest {
         String category = b.assignCategory(bmi);
         assertEquals(category, "Obesity");
     }
+
 }
