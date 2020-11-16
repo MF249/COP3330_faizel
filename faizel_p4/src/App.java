@@ -1,17 +1,19 @@
-import java.util.ArrayList;
-import java.util.Formatter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class App {
-    private TaskList list = new TaskList();
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        // create instance of App.java
         App app = new App();
-
+        // prompt user to create/load list
+        app.mainMenuInterface();
     }
 
     // prompt to ask user whether to create new list or load saved list
-    public static String mainMenuPrompt() {
+    public static int mainMenuPrompt() {
         System.out.println("Main Menu");
         System.out.println("------------");
         System.out.println("          ");
@@ -24,13 +26,14 @@ public class App {
         Scanner input = new Scanner(System.in);
         // read input from user
         String done = input.nextLine();
-        // return user input string
-        return done;
+        // return user input as int
+        int output = Integer.parseInt(done);
+        return output;
     }
 
     // print list operation menu prompt
-    public static String listOperationMenuPrompt() {
-        System.out.println("List Operation Menu");
+    public static int listOperationMenuPrompt() {
+        System.out.println("\nList Operation Menu");
         System.out.println("----------------------");
         System.out.println("          ");
         System.out.println("1) view the list");
@@ -47,115 +50,321 @@ public class App {
         Scanner input = new Scanner(System.in);
         // read input from user
         String done = input.nextLine();
-        // return user input string
+        // return user input as int
+        int output = Integer.parseInt(done);
+        return output;
+    }
+
+    public static int editTaskPrompt() {
+        System.out.println("Which task will you edit?");
+
+        // initialize scanner for input
+        Scanner input = new Scanner(System.in);
+        // read input from user
+        String done = input.nextLine();
+        // return user input as int
+        int output = Integer.parseInt(done);
+        return output;
+    }
+
+    public static int deleteTaskPrompt() {
+        System.out.println("Which task will you remove?");
+
+        // initialize scanner for input
+        Scanner input = new Scanner(System.in);
+        // read input from user
+        String done = input.nextLine();
+        // return user input as int
+        int output = Integer.parseInt(done);
+        return output;
+    }
+
+    public static int completeTaskPrompt() {
+        System.out.println("Which task will you mark as completed?");
+
+        // initialize scanner for input
+        Scanner input = new Scanner(System.in);
+        // read input from user
+        String done = input.nextLine();
+        // return user input as int
+        int output = Integer.parseInt(done);
+        return output;
+    }
+
+    public static int incompleteTaskPrompt() {
+        System.out.println("Which task will you unmark as completed?");
+
+        // initialize scanner for input
+        Scanner input = new Scanner(System.in);
+        // read input from user
+        String done = input.nextLine();
+        // return user input as int
+        int output = Integer.parseInt(done);
+        return output;
+    }
+
+    public static String writeAndSaveListPrompt() {
+        System.out.println("Enter the filename to save as: ");
+
+        // initialize scanner for input
+        Scanner input = new Scanner(System.in);
+        // read input from user
+        String done = input.nextLine();
         return done;
     }
 
-    // create a program that allows the user to view the tasks in the list
-        // print all TaskItems in TaskList
-        // open list operation menu
+    public static String loadSavedListPrompt() {
+        System.out.println("Enter the filename to load: ");
+
+        // initialize scanner for input
+        Scanner input = new Scanner(System.in);
+        // read input from user
+        String done = input.nextLine();
+        return done;
+    }
 
     // create a program that allows the user to create a task
-    public void createTaskItem(TaskList userList, int index) {
-        // take name/description/date
-        String title = getTitle();
-        String description = getDescription();
-        String date = getDate();
+    private void createTaskItem(TaskList list) {
+        TaskItem entry = null;
 
-        // create TaskItem
-        TaskItem entry = new TaskItem(title, description, date);
+        while(true) {
+            try {
+                // take name/description/date
+                String title = getTitle();
+                String description = getDescription();
+                String date = getDate();
+
+                // create TaskItem
+                entry = new TaskItem(title, description, date);
+                break;
+            } catch (TaskItem.InvalidTitleException ex) {
+                System.out.println("WARNING: title field left empty; must be at least one character long\n");
+            } catch (TaskItem.InvalidDescriptionException ex) {
+                System.out.println("WARNING: description field left empty; must be at least one character long\n");
+            } catch (TaskItem.InvalidEmptyDateException ex) {
+                System.out.println("WARNING: date field left empty; must be at least one character long\n");
+            } catch (TaskItem.InvalidDateFormatException ex) {
+                System.out.println("WARNING: invalid date format used; must be in YYYY-MM-DD format\n");
+            }
+        }
 
         // add to TaskList
-        list.add(index, entry);
+        list.add(entry);
     }
 
-        // create a program that allows the user to edit a task
-            // print all TaskItems in TaskList
-            // prompt user to choose which task to edit
-            // change name/description/date of selected TaskItem
-            // open list operation menu
+    // create a program that allows the user to edit a task
+    private void editTaskItem(TaskList list) {
+        // print all TaskItems in TaskList
+        list.listPrint();
+        // prompt user to choose which task to edit
+        int editNumber = editTaskPrompt();
+        // change name/description/date of selected TaskItem
+        TaskItem temp = list.get(editNumber);
+        changeTitle(temp);
+        changeDescription(temp);
+        changeDate(temp);
+    }
 
-        // create a program that marks a task as completed
-            // displays uncompleted tasks
-            // asks user which to mark as completed
-            // changes selected TaskItem to completed status
-            // open list operation menu
-
-        // create a program that un-marks a task as completed
-            // displays completed tasks
-            // asks user which to revert to uncompleted
-            // changes selected TaskItem to uncompleted status
-            // open list operation menu
-
-        // create a program which allows the user to remove a listed task
-            // displays all tasks
-            // prompt user to choose which TaskItem to select
-            // removes TaskItem from TaskList
-            // open list operation menu
-
-        // create a program which allows the user to save the list to a .txt file
-            // asks user to enter the filename to save under
-            // saves TaskList to .txt file of given name
-            // open list operation menu
-
-    // option to quit
-    // return to main menu
-
-    // create a program that allows the user to load a saved list
-        // asks user to enter the filename of the saved list
-        // writes in TaskList using .txt file
-        // open list operation menu
-
-    // quit option
-    // exit
-
-    public String getTitle() {
-        // will ask the user to reenter a title is field is left empty
-        Scanner input = new Scanner(System.in);
-        String title = "";
+    // create a program that marks a task as completed
+    private void completeTaskItem(TaskList list) {
+        // displays uncompleted tasks
+        list.typeListPrint(0);
         while(true) {
-            System.out.println("Task title: ");
-            title = input.nextLine();
-
-            if(isStringValid(title)) {
+            try {
+                // asks user which to mark as completed
+                int completeNumber = completeTaskPrompt();
+                // changes selected TaskItem to completed status
+                TaskItem temp = list.get(completeNumber);
+                temp.setCompletion(true);
                 break;
+            } catch (TaskList.InvalidListIndexException ex) {
+                System.out.println("WARNING: task does not exist; please enter a different number");
+            } catch (TaskItem.InvalidCompletionStatusException ex) {
+                System.out.println("WARNING: task is already complete; please enter a different number");
             }
         }
-        return title;
     }
 
-    public String getDescription() {
-        // will ask the user to reenter a title is field is left empty
-        Scanner input = new Scanner(System.in);
-        String description = "";
+    // create a program that un-marks a task as completed
+    private void incompleteTaskItem(TaskList list) {
+        // displays completed tasks
+        list.typeListPrint(1);
         while(true) {
-            System.out.println("Task description: ");
-            description = input.nextLine();
-
-            if(isStringValid(description)) {
+            try {
+                // asks user which to revert to uncompleted
+                int incompleteNumber = incompleteTaskPrompt();
+                // changes selected TaskItem to uncompleted status
+                TaskItem temp = list.get(incompleteNumber);
+                temp.setCompletion(false);
                 break;
+            } catch (TaskList.InvalidListIndexException ex) {
+                System.out.println("WARNING: task does not exist; please enter a different number");
+            } catch (TaskItem.InvalidCompletionStatusException ex) {
+                System.out.println("WARNING: task is already incomplete; please enter a different number");
             }
         }
-        return description;
     }
 
-    public String getDate() {
-        // will ask the user to reenter a title is field is left empty
-        Scanner input = new Scanner(System.in);
-        String date = "";
+    // create a program which allows the user to remove a listed task
+    private void deleteTask(TaskList list) {
+        // displays all tasks
+        list.listPrint();
         while(true) {
-            System.out.println("Task due date (YYYY-MM-DD): ");
-            date = input.nextLine();
-
-            if(isStringValid(date)) {
+            try {
+                // prompt user to choose which TaskItem to select
+                int deleteNumber = deleteTaskPrompt();
+                // gets task to check if task exists
+                list.get(deleteNumber);
+                // removes TaskItem from TaskList
+                list.remove(deleteNumber);
                 break;
+            } catch (TaskList.InvalidListIndexException ex) {
+                System.out.println("WARNING: task does not exist; please delete an existing task");
             }
         }
-        return date;
     }
 
-    public boolean isStringValid(String entry) {
-        return entry.length() > 0;
+
+    private String getTitle() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Task title: ");
+        return input.nextLine();
+    }
+
+    private String getDescription() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Task description: ");
+        return input.nextLine();
+    }
+
+    private String getDate() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Task due date (YYYY-MM-DD): ");
+        return input.nextLine();
+    }
+
+    private void changeTitle(TaskItem task) {
+        String newTitle = getTitle();
+        task.setTitle(newTitle);
+    }
+
+    private void changeDescription(TaskItem task) {
+        String newDescription = getDescription();
+        task.setDescription(newDescription);
+    }
+
+    private void changeDate(TaskItem task) {
+        String newDate = getDate();
+        task.setDate(newDate);
+    }
+
+    protected void mainMenuInterface() throws IOException {
+        TaskList list = null;
+        int loop = 1;
+
+        while(loop == 1) {
+            int option = mainMenuPrompt();
+            int resume = 1;
+            switch (option) {
+                case 1:
+                    list = new TaskList();
+                    System.out.println("new task list has been created");
+                    while (resume == 1) {
+                        resume = listOperationInterface(list, resume);
+                    }
+                    break;
+
+                case 2:
+                    String filename = loadSavedListPrompt();
+                    list = readList(filename);
+                    System.out.println("task list has been loaded");
+                    while (resume == 1) {
+                        resume = listOperationInterface(list, resume);
+                    }
+                    break;
+
+                case 3:
+                    loop = 0;
+            }
+        }
+    }
+
+    protected int listOperationInterface(TaskList list, int loop) {
+        while(true) {
+            try {
+                int option = listOperationMenuPrompt();
+                switch (option) {
+                    case 1:
+                        list.emptyListCheck();
+                        list.listPrint();
+                        return 1;
+
+                    case 2:
+                        createTaskItem(list);
+                        return 1;
+
+                    case 3:
+                        list.emptyListCheck();
+                        editTaskItem(list);
+                        return 1;
+
+                    case 4:
+                        list.emptyListCheck();
+                        deleteTask(list);
+                        return 1;
+
+                    case 5:
+                        list.emptyListCheck();
+                        list.statusCheck(1);
+                        completeTaskItem(list);
+                        return 1;
+
+                    case 6:
+                        list.emptyListCheck();
+                        list.statusCheck(0);
+                        incompleteTaskItem(list);
+                        return 1;
+
+                    case 7:
+                        list.emptyListCheck();
+                        String filename = writeAndSaveListPrompt();
+                        list.writeList(filename);
+                        System.out.println("Task list has been saved");
+                        return 1;
+
+                    case 8:
+                        return 0;
+                }
+            } catch (TaskList.InvalidCompletionAttemptException ex) {
+                System.out.println("WARNING: No tasks are completed; please select another option");
+            } catch (TaskList.InvalidIncompletionAttemptException ex) {
+                System.out.println("WARNING: All tasks are completed; please select another option");
+            } catch (TaskList.InvalidEmptyListException ex) {
+                System.out.println("WARNING: List currently has no tasks; please first create a task");
+            }
+        }
+    }
+
+    protected TaskList readList(String filename) throws IOException {
+        FileReader fr = new FileReader(filename);
+        BufferedReader br = new BufferedReader(fr);
+        TaskList list = new TaskList();
+        String string;
+        String[] stringArray;
+
+        while((string = br.readLine()) != null) {
+            stringArray = string.split(",");
+
+            TaskItem temp = new TaskItem(stringArray[0], stringArray[1], stringArray[2]);
+            if (Objects.equals("true", stringArray[3])) {
+                temp.setCompletion(true);
+            }
+            list.add(temp);
+        }
+        fr.close();
+        br.close();
+
+        return list;
     }
 
 }
